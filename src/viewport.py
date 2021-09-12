@@ -25,8 +25,6 @@ class Viewport:
 
         self.vpChanged : EventDivuser = EventDivuser(lambda e : e.order)
 
-        #self.visualDebug.setWindowHeigth(vp.size[1])
-
         self.vpSettings = ViewportSettings((width, heigth), 0, 1)
         self.vpFsSettings =  ViewportSettings((self.monitorData.current_w, self.monitorData.current_h), pg.HWSURFACE | pg.DOUBLEBUF, 1)
         self.curVpSettings = self.vpSettings
