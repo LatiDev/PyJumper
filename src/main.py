@@ -2,5 +2,5 @@ from game import *
 
 pg.init()
 
-game = Game(800, 600)
+game = Game(512, 512)
 game.loop()

@@ -1,13 +1,13 @@
 import pygame as pg
 import pygame.font as pgFont
-from viewportsettings import *
+from viewportsettingschangedevent import *
 
 class VisualDebug:
     def __init__(self, 
         startPos : list,
         windowHeigth : int,
         delta : int,
-        fontProportion : int,
+        fontSize : int,
         fontName : str):
         
         self.nextPos = startPos
@@ -15,31 +15,26 @@ class VisualDebug:
         self.windowHeigth = windowHeigth
 
         self.delta = delta
-        self.proportion = fontProportion
+        self.deltaScale = delta
+        
+        self.fontSize = fontSize
+        self.fontScale = fontSize
 
         self.fontName : str = fontName
-        self.font : pgFont.Font = pgFont.SysFont(fontName, int(windowHeigth / fontProportion))
+        self.font : pgFont.Font = pgFont.SysFont(fontName, self.fontScale)
 
     def display(self, txt : str, color : pg.Color):
         text = self.font.render(txt, True, color)
         self.window.blit(text, self.nextPos)
-        self.nextPos[1] += int(self.windowHeigth / self.delta)
+        self.nextPos[1] += self.deltaScale
 
     def reset(self):
         self.nextPos[1] = 0
 
-    def onViewportChanged(self, vp : ViewportSettings):
-        self.setWindowHeigth(vp.size[1])
-
-    def setWindowHeigth(self, wh : int):
-        self.windowHeigth = wh
-        self.font = pgFont.SysFont(self.fontName, int(wh / self.proportion))
+    def onViewportChanged(self, vpce : ViewportSettingsChangedEvent):
+        print(vpce.getRatioSize())
+        #self.setWindowHeigth(vpce.viewport.size[1])
+        pass
 
     def setWindow(self, window):
         self.window = window
-
-    def getFontSize(self) -> int:
-        return int(self.windowHeigth / self.proportion)
-    
-    def getDelta(self) -> int:
-        return int(self.windowHeigth / self.delta)

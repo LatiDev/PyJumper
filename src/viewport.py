@@ -29,7 +29,7 @@ class Viewport:
         self.vpFsSettings =  ViewportSettings((self.monitorData.current_w, self.monitorData.current_h), pg.HWSURFACE | pg.DOUBLEBUF, 1)
         self.curVpSettings = self.vpSettings
 
-        self.visualDebug : VisualDebug = VisualDebug([5, 5], self.vpSettings.size[1], 48, 60, "Verdana")
+        self.visualDebug : VisualDebug = VisualDebug([5, 5], self.vpSettings.size[1], 10, 10, "Verdana")
         self.vpChanged.add(Event(self.visualDebug.onViewportChanged, 1))
 
         self.screen : pg.Surface = None
@@ -42,8 +42,10 @@ class Viewport:
             pgDisplay.toggle_fullscreen()
 
     def setViewportSettings(self, vp : ViewportSettings):
+        vsce = ViewportSettingsChangedEvent(self.curVpSettings, vp) 
+        
         self.curVpSettings = vp
-        self.vpChanged.diffuse(vp)
+        self.vpChanged.diffuse(vsce)
         self.screen = pgDisplay.set_mode(vp.size, vp.flags, vsync=vp.vsync)
 
     def debug(self):
@@ -51,8 +53,8 @@ class Viewport:
         self.visualDebug.display(f"Window Size: {self.curVpSettings.size}", self.debugColor)
         self.visualDebug.display(f"Flags: {self.curVpSettings.flags}", self.debugColor)
         self.visualDebug.display(f"Vsync: {self.curVpSettings.vsync}", self.debugColor)
-        self.visualDebug.display(f"Font size: {self.visualDebug.getFontSize()}", self.debugColor)
-        self.visualDebug.display(f"Delta: {self.visualDebug.getDelta()}", self.debugColor)
+        self.visualDebug.display(f"Font size: {self.visualDebug.fontScale}", self.debugColor)
+        self.visualDebug.display(f"Delta: {self.visualDebug.deltaScale}", self.debugColor)
         self.visualDebug.display(f"Is Fullscreen: {self.isFullScreen}", self.debugColor)
 
     def handleEvent(self, event : pgEvent.Event):
