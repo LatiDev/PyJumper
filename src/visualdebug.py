@@ -5,14 +5,12 @@ from viewportsettingschangedevent import *
 class VisualDebug:
     def __init__(self, 
         startPos : list,
-        windowHeigth : int,
         delta : int,
         fontSize : int,
         fontName : str):
         
         self.nextPos = startPos
         self.window : pg.Surface = None
-        self.windowHeigth = windowHeigth
 
         self.delta = delta
         self.deltaScale = delta
@@ -31,10 +29,14 @@ class VisualDebug:
     def reset(self):
         self.nextPos[1] = 0
 
+    def space(self):
+        self.nextPos[1] += self.deltaScale
+
     def onViewportChanged(self, vpce : ViewportSettingsChangedEvent):
-        print(vpce.getRatioSize())
-        #self.setWindowHeigth(vpce.viewport.size[1])
-        pass
+        ratio = vpce.getRatioSize()
+        self.deltaScale = int(self.delta * ratio[1])
+        self.fontScale = int(self.fontSize * ratio[1])
+        self.font : pgFont.Font = pgFont.SysFont(self.fontName, self.fontScale)
 
     def setWindow(self, window):
         self.window = window

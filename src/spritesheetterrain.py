@@ -22,3 +22,13 @@ class SpriteSheetTerrain(SpriteSheet):
         self.addTileAt(SS_TILE_UP_RIGTH_ALT)
         self.addTileAt(SS_TILE_DOWN_LEFT_ALT)
         self.addTileAt(SS_TILE_DOWN_RIGTH_ALT) #12
+    
+    def load(
+        filename: str, 
+        tileSize: tuple, 
+        proccess: int, 
+        color: tuple, 
+        tranparent: tuple = (0, 0, 0, 255)):
+        
+        img = loadAsset(SPRITESHEET_PATH, filename)
+        return SpriteSheetTerrain(img, tileSize, proccess, color, tranparent)

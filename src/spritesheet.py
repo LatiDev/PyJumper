@@ -2,6 +2,7 @@ import pygame as pg
 import pygame.image as pgImage
 import pygame.transform as pgTransf
 from viewportsettingschangedevent import *
+from assetmanager import *
 
 SS_TILE_UP_LEFT =           (0, 0, 0)
 SS_TILE_UP =                (1, 0, 1)
@@ -39,7 +40,6 @@ class SpriteSheet:
         
         self.sheet = sheet
         self.tileSize = tileSize
-        self.tileScale : tuple = tileSize
         self.proccess = proccess
         self.color = color
         self.tranparent = tranparent
@@ -66,3 +66,17 @@ class SpriteSheet:
         scaleImage.set_colorkey(self.tranparent)
         
         return scaleImage
+
+    def scaleAllTileTo(self, scale : tuple):        
+        for i in range(len(self.tiles)):
+            self.tiles[i] = self.scaleTileTo(self.tiles[i], scale)
+
+    def load(
+        filename : str,
+        tileSize : tuple,
+        proccess : int,
+        color : tuple,
+        tranparent : tuple = (0, 0, 0, 255)):
+        
+        img = loadAsset(SPRITESHEET_PATH, filename)
+        return SpriteSheet(img, tileSize, proccess, color, tranparent)

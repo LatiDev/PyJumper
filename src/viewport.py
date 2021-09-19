@@ -25,14 +25,16 @@ class Viewport:
 
         self.vpChanged : EventDivuser = EventDivuser(lambda e : e.order)
 
+        self.baseWindowSize = (width, heigth)
+
         self.vpSettings = ViewportSettings((width, heigth), 0, 1)
         self.vpFsSettings =  ViewportSettings((self.monitorData.current_w, self.monitorData.current_h), pg.HWSURFACE | pg.DOUBLEBUF, 1)
         self.curVpSettings = self.vpSettings
 
-        self.visualDebug : VisualDebug = VisualDebug([5, 5], self.vpSettings.size[1], 10, 10, "Verdana")
+        self.visualDebug : VisualDebug = VisualDebug([5, 5], 10, 10, "Verdana")
         self.vpChanged.add(Event(self.visualDebug.onViewportChanged, 1))
 
-        self.screen : pg.Surface = None
+        self.screen : pg.Surface = pgDisplay.set_mode(self.vpSettings.size, self.vpSettings.flags, vsync=self.vpSettings.vsync)
         self.setViewportSettings(self.vpSettings)
         
         self.visualDebug.setWindow(self.screen)
@@ -42,11 +44,12 @@ class Viewport:
             pgDisplay.toggle_fullscreen()
 
     def setViewportSettings(self, vp : ViewportSettings):
-        vsce = ViewportSettingsChangedEvent(self.curVpSettings, vp) 
-        
-        self.curVpSettings = vp
-        self.vpChanged.diffuse(vsce)
-        self.screen = pgDisplay.set_mode(vp.size, vp.flags, vsync=vp.vsync)
+        if (self.curVpSettings.size != vp.size):
+            vsce = ViewportSettingsChangedEvent(self.vpSettings, vp) 
+            
+            self.curVpSettings = vp
+            self.vpChanged.diffuse(vsce)
+            self.screen = pgDisplay.set_mode(vp.size, vp.flags, vsync=vp.vsync)
 
     def debug(self):
         self.visualDebug.display(f"Monitor Size: {(self.monitorData.current_w, self.monitorData.current_h)}", self.debugColor)
