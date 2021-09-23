@@ -6,6 +6,7 @@ import pygame.time as pgTime
 import pygame.mouse as pgMouse
 import pygame.event as pgEvent
 import pygame.display as pgDisplay
+from ratio import *
 from viewportsettings import *
 from visualdebug import *
 from eventdivuser import *
@@ -17,6 +18,10 @@ class Viewport:
         self.clock = pgTime.Clock()
         self.monitorData = pgDisplay.Info()
         self.targetFps : int = targetFps
+        
+        #self.ratio = Ratio(16, 9)
+        #self.ratioIndex = 1
+        #self.ratio.getMultiplier(self.ratioIndex)
 
         self.debugColor = debugColor
 
@@ -79,8 +84,8 @@ class Viewport:
                 self.setViewportSettings(ViewportSettings((1600, 900), 0, 1))
             elif (event.key == pg.K_e):
                 self.setViewportSettings(self.vpFsSettings)
-        elif event.type == pg.WINDOWEVENT:
-            if event.event == pg.WINDOWEVENT_MAXIMIZED:
-                self.isMaximized = True 
-            elif event.event == pg.WINDOWEVENT_MINIMIZED or event.event == pg.WINDOWEVENT_RESTORED:
-                self.isMaximized = False
+        if event.type == pg.WINDOWMAXIMIZED:
+            self.isMaximized = True
+        if event.type == pg.WINDOWMINIMIZED or event.type == pg.WINDOWRESTORED:
+            self.isMaximized = False
+    
