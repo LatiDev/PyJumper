@@ -10,6 +10,9 @@ class LevelManager:
         self.lvlIndex = 0
         self.transparent = (0, 0, 0, 255)
         self.scaledSize : tuple = (screenSize[1], screenSize[1])
+        
+        self.curlvl = None
+        self.curlvlScaled = None
 
         self.updateCurrentLevel()
         

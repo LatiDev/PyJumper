@@ -9,10 +9,11 @@ from viewportsettingschangedevent import *
 class Level:
     ALL = []
     COUNT = 3
-    def __init__(self, pp, l, b):
+    def __init__(self, pp, level, boundaries, tiles):
         self.playerPos : tuple = pp
-        self.level : pg.Surface = l
-        self.boundaries : list[Boundary] = b
+        self.level : pg.Surface = level
+        self.boundaries : list[Boundary] = boundaries
+        self.tiles : list[pg.Rect] = tiles
 
 def create(
     image : PILImage.Image,
@@ -22,6 +23,7 @@ def create(
     
     playerPosition : tuple = None
     boundaries : list[Boundary] = []
+    tiles : list[pg.Rect] = []
 
     pixels = image.load()
     imgSize = image.size
@@ -191,7 +193,8 @@ def create(
                             hori.end = horiBound.end
 
                     nextTileSpriteID : pg.Surface = lastSS.tiles[indexTileToAdd[2]]
-                    #print(nextTileRect)
+                    #print(nextTileSpriteID.get_rect())
+                    tiles.append(nextTileSpriteID.get_rect())
                     lvlStatic.blit(nextTileSpriteID, realPosition)
 
                 elif (lastSS.proccess == PROCESS_ACTOR):
@@ -206,7 +209,7 @@ def create(
     boundaries.append(Boundary(screenSize[0], screenSize[1], 0, screenSize[1]))
     boundaries.append(Boundary(0, screenSize[1], 0, 0))
 
-    return Level(playerPosition, lvlStatic, boundaries)
+    return Level(playerPosition, lvlStatic, boundaries, tiles)
 
 def load(
     id : int,

@@ -19,8 +19,8 @@ class Viewport:
         self.monitorData = pgDisplay.Info()
         self.targetFps : int = targetFps
         
-        #self.ratio = Ratio(16, 9)
-        #self.ratioIndex = 1
+        self.ratio = Ratio(16, 16)
+        self.ratioIndex = 1
         #self.ratio.getMultiplier(self.ratioIndex)
 
         self.debugColor = debugColor
@@ -79,11 +79,17 @@ class Viewport:
                     pgDisplay.toggle_fullscreen()
                     self.setViewportSettings(self.vpSettings)
             elif (event.key == pg.K_a):
-                self.setViewportSettings(self.vpSettings)
+                #self.setViewportSettings(self.vpSettings)
+                #self.setViewportSettings(ViewportSettings(self.ratio.getMultiplier(self.ratioIndex), 0, 1))
+                #self.ratioIndex -= 1
+                pass
             elif (event.key == pg.K_z):
-                self.setViewportSettings(ViewportSettings((1600, 900), 0, 1))
-            elif (event.key == pg.K_e):
-                self.setViewportSettings(self.vpFsSettings)
+                #self.setViewportSettings(ViewportSettings(self.ratio.getMultiplier(self.ratioIndex), 0, 1))
+                #self.ratioIndex += 1
+                pass
+            elif (event.key == pg.K_p):
+                #self.setViewportSettings(self.vpFsSettings)
+                pass
         if event.type == pg.WINDOWMAXIMIZED:
             self.isMaximized = True
         if event.type == pg.WINDOWMINIMIZED or event.type == pg.WINDOWRESTORED:

@@ -36,12 +36,14 @@ class SpriteSheet:
         tileSize : tuple,
         proccess : int,
         color : tuple,
+        scaleTo : int = 1,
         tranparent : tuple = (0, 0, 0, 255)):
         
         self.sheet = sheet
         self.tileSize = tileSize
         self.proccess = proccess
         self.color = color
+        self.scaleTo = scaleTo
         self.tranparent = tranparent
 
         self.tiles : list[pg.Surface] = []
@@ -54,7 +56,7 @@ class SpriteSheet:
         image.set_colorkey(self.tranparent)
         image.blit(self.sheet, (0, 0), rect)
 
-        return image
+        return self.scaleTileTo(image, (self.tileSize[0] * self.scaleTo, self.tileSize[1] * self.scaleTo))
 
     def addTileAt(self, position : tuple):
         tile = self.getTileAt(position)
@@ -76,7 +78,8 @@ class SpriteSheet:
         tileSize : tuple,
         proccess : int,
         color : tuple,
+        scaleTo : int = 1,
         tranparent : tuple = (0, 0, 0, 255)):
         
         img = loadAsset(SPRITESHEET_PATH, filename)
-        return SpriteSheet(img, tileSize, proccess, color, tranparent)
+        return SpriteSheet(img, tileSize, proccess, color, scaleTo, tranparent)

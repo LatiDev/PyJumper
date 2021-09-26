@@ -5,9 +5,10 @@ class SpriteSheetTerrain(SpriteSheet):
         sheet: pg.Surface, 
         tileSize: tuple,
         proccess: int, 
-        color: tuple, 
+        color: tuple,
+        scaleTo : int = 1,
         tranparent: tuple = (0, 0, 0, 255)):
-        super().__init__(sheet, tileSize, proccess, color, tranparent)
+        super().__init__(sheet, tileSize, proccess, color, scaleTo, tranparent)
 
         self.addTileAt(SS_TILE_UP_LEFT) #0
         self.addTileAt(SS_TILE_UP)
@@ -27,8 +28,9 @@ class SpriteSheetTerrain(SpriteSheet):
         filename: str, 
         tileSize: tuple, 
         proccess: int, 
-        color: tuple, 
+        color: tuple,
+        scaleTo : int = 1,
         tranparent: tuple = (0, 0, 0, 255)):
         
         img = loadAsset(SPRITESHEET_PATH, filename)
-        return SpriteSheetTerrain(img, tileSize, proccess, color, tranparent)
+        return SpriteSheetTerrain(img, tileSize, proccess, color, scaleTo, tranparent)

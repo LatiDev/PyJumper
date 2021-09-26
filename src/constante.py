@@ -1,0 +1,14 @@
+from spritesheetterrain import *
+from animationmanager import *
+
+GRASS_SS = SpriteSheetTerrain.load("GrassBlockTileSet.png", (16, 16), PROCESS_TERRAIN, GRASS_RGB)
+BRICK_SS = SpriteSheetTerrain.load("MidBrickTileSet.png", (16, 16), PROCESS_TERRAIN, BRICK_RGB)
+PIKE_SS = SpriteSheetTerrain.load("SmallPikeBlockTileSet.png", (16, 16), PROCESS_TERRAIN, PIKE_RGB)
+CHARACTER_SS = SpriteSheet.load("CharacterTileSet.png", (8, 8), PROCESS_ACTOR, PLAYER_RGB, 2)
+CHARACTER_IDLE = CHARACTER_SS.getTileAt((0, 0))
+CHARACTER_WALK_1 = CHARACTER_SS.getTileAt((1, 0))
+CHARACTER_JUMP = CHARACTER_SS.getTileAt((2, 0))
+CHARACTER_IDLE_ANIMATION = Animation([CHARACTER_IDLE], 0.1)
+CHARACTER_WALK_ANIMATION = Animation([CHARACTER_IDLE, CHARACTER_WALK_1, CHARACTER_JUMP], 0.1)
+CHARACTER_JUMP_ANIMATION = Animation([CHARACTER_JUMP], 0.1)
+CHARACTER_ANIMATION_MANAGER = AnimationManager([CHARACTER_IDLE_ANIMATION, CHARACTER_WALK_ANIMATION, CHARACTER_JUMP_ANIMATION], 0)
