@@ -1,4 +1,4 @@
-from Component import *
+from component import *
 
 class GameObject:
     __ALL : list['GameObject'] = []
