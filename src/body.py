@@ -72,30 +72,31 @@ class Body(Sprite):
 
         body.rect.x += position[0]
         for b in bodys:   
-            if body.rect.colliderect(b.rect):
+            if body.rect.colliderect(b):
                 if position[0] > 0:
-                    body.rect.right = b.rect.left
-                    nbCollision += COLLIDING_RIGHT
+                    body.rect.right = b.left
+                    #nbCollision += COLLIDING_RIGHT
                 elif position[0] < 0:
-                    body.rect.left = b.rect.right
-                    nbCollision += COLLIDING_LEFT
-                bodyCollied.append(BodyCollision(b, nbCollision))
+                    body.rect.left = b.right
+                    #nbCollision += COLLIDING_LEFT
+                #bodyCollied.append(BodyCollision(b, nbCollision))
 
         body.rect.y += position[1]
         for b in bodys:
-            if body.rect.colliderect(b.rect):
-                indexBody : int = self.getIndexBody(bodys, b, nbCollision)
+            if body.rect.colliderect(b):
+                #indexBody : int = self.getIndexBody(bodys, b, nbCollision)
                 if position[1] > 0:
-                    body.rect.bottom = b.rect.top
-                    if (indexBody > -1):
-                        bodyCollied[indexBody].nbCollision |= COLLIDING_DOWN
-                    else:
-                        bodyCollied.append(BodyCollision(b, nbCollision))
+                    body.rect.bottom = b.top
+                    #if (indexBody > -1):
+                    #    bodyCollied[indexBody].nbCollision |= COLLIDING_DOWN
+                    #else:
+                    #    bodyCollied.append(BodyCollision(b, nbCollision))
+                
                 elif position[1] < 0:
-                    body.rect.top = b.rect.bottom 
-                    if (indexBody > -1):
-                        bodyCollied[indexBody].nbCollision |= COLLIDING_UP
-                    else:
-                        bodyCollied.append(BodyCollision(b, nbCollision))
+                    body.rect.top = b.bottom 
+                    #if (indexBody > -1):
+                    #    bodyCollied[indexBody].nbCollision |= COLLIDING_UP
+                    #else:
+                    #    bodyCollied.append(BodyCollision(b, nbCollision))
 
         return bodyCollied

@@ -29,9 +29,13 @@ class Game:
         self.targetFps : int = 60
 
         self.viewport = Viewport(width, heigth, self.pink)
-        self.levelMngr = LevelManager((width, heigth))
+        self.levelCreateOption = LevelCreateOption(0, (width, heigth), 16, False)
+        self.levelMngr = LevelManager(self.levelCreateOption)
 
-        self.player = Player(self.levelMngr.curlvlScaled.playerPos, CHARACTER_ANIMATION_MANAGER, 2, 6, 2, [], PLAYER_RGB)
+        print(self.levelMngr.__currentLevel)
+
+
+        self.player = Player(self.levelMngr.curlvl.playerPos, CHARACTER_ANIMATION_MANAGER, 2, 6, 2, [], PLAYER_RGB)
         #self.player.setPosition(self.levelMngr.curlvlScaled.playerPos)
 
         self.viewport.vpChanged.add(Event(self.levelMngr.onViewportChanged, 3))
@@ -61,7 +65,7 @@ class Game:
             self.viewport.visualDebug.reset()
 
             #self.viewport.screen.blit(self.grassTest.tiles[0], (0, 0)
-            #self.player.move(self.levelMngr.curlvlScaled.tiles)
+            self.player.move(self.levelMngr.curlvlScaled.tiles)
             self.viewport.screen.blit(self.player.currentImage, self.player.getPosition())
 
             for event in pgEvent.get():

@@ -1,3 +1,4 @@
+import copy
 import pygame.math as pgMath
 from assetmanager import *
 from boundary import *
@@ -15,20 +16,24 @@ class Level:
         self.boundaries : list[Boundary] = boundaries
         self.tiles : list[pg.Rect] = tiles
 
-def create(
-    image : PILImage.Image,
-    screenSize : tuple,
-    expectedTileSize : int,
-    aroundDirt : bool = False) -> Level:
-    
+class LevelCreateOption:
+    def __init__(self, id, screenSize, expectedTileSize, aroundDirt):
+        self.id : int = id
+        self.screenSize : tuple = screenSize
+        self.expectedTileSize : int = expectedTileSize
+        self.aroundDirt : bool = aroundDirt
+
+
+def createLevel(llo : LevelCreateOption) -> Level:   
     playerPosition : tuple = None
     boundaries : list[Boundary] = []
     tiles : list[pg.Rect] = []
 
+    image = loadAsset(LEVEL_PATH, f"lvl{llo.id}.bmp")
     pixels = image.load()
     imgSize = image.size
 
-    lvlRect = pg.Rect(0, 0, expectedTileSize * imgSize[0], expectedTileSize * imgSize[1])
+    lvlRect = pg.Rect(0, 0, llo.expectedTileSize * imgSize[0], llo.expectedTileSize * imgSize[1])
     lvlStatic = pg.Surface(lvlRect.size)
 
     lastRgbCode : tuple = NONE_RGB
@@ -52,7 +57,7 @@ def create(
                     lastRgbCode = pixelCurrent
 
             if (lastSS != None):
-                realPosition = (x * expectedTileSize, y * expectedTileSize)
+                realPosition = (x * llo.expectedTileSize, y * llo.expectedTileSize)
                 if (lastSS.proccess == PROCESS_TERRAIN):                        
                     isYMin = y == 0
                     isXMin = x == 0
@@ -75,35 +80,35 @@ def create(
                     isRigthType = canRigth and pixels[x + 1, y] == lastSS.color
 
                     isUpDirt = canUp and pixels[x, y - 1] == DIRT_RGB
-                    if (aroundDirt and isYMin): 
+                    if (llo.aroundDirt and isYMin): 
                         isUpDirt = True
                     
                     isDownDirt = canDown and pixels[x, y + 1] == DIRT_RGB
-                    if (aroundDirt and isYMax): 
+                    if (llo.aroundDirt and isYMax): 
                         isDownDirt = True
                     
                     isLeftDirt = canLeft and pixels[x - 1, y] == DIRT_RGB
-                    if (aroundDirt and isXMin): 
+                    if (llo.aroundDirt and isXMin): 
                         isLeftDirt = True
                     
                     isRigthDirt = canRigth and pixels[x + 1, y] == DIRT_RGB 
-                    if (aroundDirt and isXMax): 
+                    if (llo.aroundDirt and isXMax): 
                         isRigthDirt = True
 
                     isUpLeftDirt = canUpLeft and pixels[x - 1, y - 1] == DIRT_RGB
-                    if (aroundDirt and isXMin and isYMin): 
+                    if (llo.aroundDirt and isXMin and isYMin): 
                         isUpLeftDirt = True
                     
                     isUpRigthDirt = canUpRigth and pixels[x + 1, y - 1] == DIRT_RGB
-                    if (aroundDirt and isXMax and isYMin): 
+                    if (llo.aroundDirt and isXMax and isYMin): 
                         isUpRigthDirt = True
                     
                     isDownRigthDirt = canDownRigth and pixels[x + 1, y + 1] == DIRT_RGB
-                    if (aroundDirt and isXMax and isYMax): 
+                    if (llo.aroundDirt and isXMax and isYMax): 
                         isDownRigthDirt = True
                     
                     isDownLeftDirt = canDownLeft and pixels[x - 1, y + 1] == DIRT_RGB
-                    if (aroundDirt and isXMin and isYMax): 
+                    if (llo.aroundDirt and isXMin and isYMax): 
                         isDownLeftDirt = True
 
                     nextTileRect : pg.Rect = pg.Rect(realPosition, imgSize)
@@ -169,7 +174,7 @@ def create(
                         for i in range(len(vertiBounds)):
                             verti = vertiBounds[i]
                             if (verti.start.x == vertiBound.start.x and verti.end.x == vertiBound.end.x and
-                            verti.end.y + expectedTileSize == vertiBound.end.y):
+                            verti.end.y + llo.expectedTileSize == vertiBound.end.y):
                                 indexVerti = i
                     
                         if (indexVerti == -1):
@@ -183,7 +188,7 @@ def create(
                         for i in range(len(horiBounds)):
                             hori = horiBounds[i]
                             if (hori.start.y == horiBound.start.y and hori.end.y == horiBound.end.y and
-                            hori.end.x + expectedTileSize == horiBound.end.x):
+                            hori.end.x + llo.expectedTileSize == horiBound.end.x):
                                 indexHori = i
                             
                         if (indexHori == -1):
@@ -204,29 +209,17 @@ def create(
     boundaries.extend(horiBounds)
     boundaries.extend(vertiBounds)
 
-    boundaries.append(Boundary(0, 0, screenSize[0], 0))
-    boundaries.append(Boundary(screenSize[0], 0, screenSize[0], screenSize[1]))
-    boundaries.append(Boundary(screenSize[0], screenSize[1], 0, screenSize[1]))
-    boundaries.append(Boundary(0, screenSize[1], 0, 0))
+    boundaries.append(Boundary(0, 0, llo.screenSize[0], 0))
+    boundaries.append(Boundary(llo.screenSize[0], 0, llo.screenSize[0], llo.screenSize[1]))
+    boundaries.append(Boundary(llo.screenSize[0], llo.screenSize[1], 0, llo.screenSize[1]))
+    boundaries.append(Boundary(0, llo.screenSize[1], 0, 0))
 
     return Level(playerPosition, lvlStatic, boundaries, tiles)
 
-def load(
-    id : int,
-    screenSize : tuple,
-    expectedTileSize : int,
-    aroundDirt : bool = False) -> Level:
-    
-    img = loadAsset(LEVEL_PATH, f"lvl{id}.bmp")
-    return create(img, screenSize, expectedTileSize, aroundDirt)
-
-def loadAll(
-    screenSize : tuple,
-    expectedTileSize : int,
-    aroundDirt : bool = False) -> list[Level]:
-    
-    for i in range(Level.COUNT):
-        img = loadAsset(LEVEL_PATH, f"lvl{i}.bmp")
-        Level.ALL.append(create(img, screenSize, expectedTileSize, aroundDirt))
+def createLevelAll(llo : LevelCreateOption) -> list[Level]:
+    startID = copy.copy(llo.id)
+    for i in range(startID, Level.COUNT):
+        llo.id = i;
+        Level.ALL.append(createLevel(llo))
 
     return Level.ALL
